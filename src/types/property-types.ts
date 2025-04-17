@@ -7,22 +7,10 @@ export interface Property {
   state: string;
   postal_code: string;
   country: string;
-  owner: {
-    id: string;
-    user: {
-      first_name: string;
-      last_name: string;
-      email: string;
-    };
-  };
-  manager?: {
-    id: string;
-    user: {
-      first_name: string;
-      last_name: string;
-      email: string;
-    };
-  };
+  owner: string; // This is just the ID string, not an object
+  owner_name: string; // Add this as a top-level property
+  manager?: string; // This is also just an ID
+  manager_name?: string; // Add this as a top-level property
   total_units: number;
   created_at: string;
 }
@@ -56,6 +44,7 @@ export interface Owner {
   id: string;
   user: {
     first_name: string;
+    owner_name: string;
     last_name: string;
     email: string;
   };

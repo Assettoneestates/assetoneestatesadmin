@@ -274,11 +274,10 @@ const PropertyList: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          {property.owner.user.first_name}{" "}
-                          {property.owner.user.last_name}
+                          {property.owner_name}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {property.owner.user.email}
+                          {/* If you need an email, you might need to add this to your API response */}
                         </div>
                       </td>
                       <td className="px-6 py-4">
