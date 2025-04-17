@@ -11,7 +11,7 @@ import {
   MapPin,
   Building,
 } from "lucide-react";
-import Layout from "../components/PropertyLayout";
+import Layout from "../components/Layout";
 import CreatePropertyModal from "../components/modals/create-property-modal";
 import EditPropertyModal from "../components/modals/edit-property-modal";
 import PropertyStatisticsModal from "../components/modals/property-statistics-modal";

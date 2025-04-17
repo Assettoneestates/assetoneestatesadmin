@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+"use client";
+
+import type React from "react";
+import { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -18,6 +21,13 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  to?: string;
+  onClick?: () => void;
+}
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +38,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     // Show confirmation modal before logout
     if (window.confirm("Are you sure you want to logout?")) {
       localStorage.removeItem("token");
+      localStorage.removeItem("accessTokenAttachment");
       navigate("/login");
     }
   };
@@ -37,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return location.pathname === path;
   };
 
-  const NavItem = ({ icon, label, to, onClick = null }) => {
+  const NavItem: React.FC<NavItemProps> = ({ icon, label, to, onClick }) => {
     const active = to ? isActive(to) : false;
 
     const content = (
@@ -99,7 +110,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Building className="h-6 w-6 text-white" />
             </div>
             <h1
-              className={`text-white text-lg font-bold transition-opacity duration-200 ${collapsed ? "opacity-0 hidden" : "opacity-100"}`}
+              className={`text-white text-lg font-bold transition-opacity duration-200 ${
+                collapsed ? "opacity-0 hidden" : "opacity-100"
+              }`}
             >
               AssetTone
             </h1>
@@ -143,7 +156,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         >
           <div>
             <p
-              className={`text-xs uppercase text-gray-400 font-medium mb-2 ml-2 ${collapsed ? "opacity-0" : "opacity-100"} transition-opacity duration-200`}
+              className={`text-xs uppercase text-gray-400 font-medium mb-2 ml-2 ${
+                collapsed ? "opacity-0" : "opacity-100"
+              } transition-opacity duration-200`}
             >
               Main Menu
             </p>
@@ -167,7 +182,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             />
 
             <div
-              className={`mt-6 mb-3 border-t border-gray-100 pt-3 ${collapsed ? "opacity-0" : "opacity-100"} transition-opacity duration-200`}
+              className={`mt-6 mb-3 border-t border-gray-100 pt-3 ${
+                collapsed ? "opacity-0" : "opacity-100"
+              } transition-opacity duration-200`}
             >
               <p className="text-xs uppercase text-gray-400 font-medium mb-2 ml-2">
                 System
@@ -249,4 +266,3 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 };
 
 export default Layout;
-

@@ -1,10 +1,10 @@
 import type React from "react";
 
-interface LayoutProps {
+interface PropertyLayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const PropertyLayout: React.FC<PropertyLayoutProps> = ({ children }) => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto py-8">{children}</div>
@@ -12,4 +12,4 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default PropertyLayout;
