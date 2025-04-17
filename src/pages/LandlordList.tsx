@@ -39,9 +39,15 @@ const CreateLandlordModal: React.FC<CreateLandlordModalProps> = ({
     setError("");
 
     try {
+      const token = localStorage.getItem("accessToken");
       await axios.post(
         "https://assettone-rental-management-production.up.railway.app/super/api/v1/landlords/create/",
         formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       onSuccess();
     } catch (error) {
@@ -281,38 +287,46 @@ const LandlordList = () => {
   const fetchLandlords = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      const token = localStorage.getItem("accessToken");
+      const { data } = await axios.get(
         "https://assettone-rental-management-production.up.railway.app/super/api/v1/landlords/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
-      const landlordData = response.data;
-      setLandlords(landlordData);
+      setLandlords(data);
 
-      // Count active and inactive landlords
-      const activeCount = landlordData.filter((l) => l.user.is_active).length;
-      const inactiveCount = landlordData.length - activeCount;
+      const activeCount = data.filter((l) => l.user.is_active).length;
+      const inactiveCount = data.length - activeCount;
       setStatusCounts({ active: activeCount, inactive: inactiveCount });
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching landlords:", error);
+    } catch (err) {
+      console.error("Error fetching landlords:", err);
+    } finally {
       setIsLoading(false);
     }
   };
 
   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
-    // Add ID to toggling set
     setTogglingIds((prev) => new Set(prev).add(id));
 
     try {
+      const token = localStorage.getItem("accessToken");
       await axios.post(
         `https://assettone-rental-management-production.up.railway.app/super/api/v1/landlords/${id}/toggle-status/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
       fetchLandlords();
-    } catch (error) {
-      console.error("Error toggling landlord status:", error);
+    } catch (err) {
+      console.error("Error toggling landlord status:", err);
     } finally {
-      // Remove ID from toggling set after completion
       setTogglingIds((prev) => {
         const updated = new Set(prev);
         updated.delete(id);
@@ -322,21 +336,18 @@ const LandlordList = () => {
   };
 
   const filteredLandlords = landlords.filter((landlord) => {
-    const matchesSearch =
-      searchTerm === "" ||
-      landlord.user.first_name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      landlord.user.last_name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      landlord.user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const { first_name, last_name, email, is_active } = landlord.user;
 
-    // Filter by status if not "all"
+    const matchesSearch =
+      !searchTerm ||
+      first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      email.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus =
       selectedStatus === "all" ||
-      (selectedStatus === "active" && landlord.user.is_active) ||
-      (selectedStatus === "inactive" && !landlord.user.is_active);
+      (selectedStatus === "active" && is_active) ||
+      (selectedStatus === "inactive" && !is_active);
 
     return matchesSearch && matchesStatus;
   });
@@ -558,4 +569,3 @@ const LandlordList = () => {
 };
 
 export default LandlordList;
-
